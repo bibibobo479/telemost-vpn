@@ -4,14 +4,14 @@
 
 | Платформа | Готовый файл |
 | --- | --- |
-| Android | [Скачать APK · 36 МБ](https://github.com/bibibobo479/telemost-vpn/releases/download/v0.1.0-beta.3/telemost-vpn-android-0.1.0-beta.3.apk) |
+| Android | [Скачать APK · 36 МБ](https://github.com/bibibobo479/telemost-vpn/releases/download/v0.1.0-beta.4/telemost-vpn-android-0.1.0-beta.4.apk) |
 | Windows x64 | [Скачать EXE · 78 МБ](https://github.com/bibibobo479/telemost-vpn/releases/download/v0.1.0-beta.2/telemost-vpn-windows-x64-0.1.0-beta.2.exe) |
 | Linux x64 | [Скачать установочный архив · 16 МБ](https://github.com/bibibobo479/telemost-vpn/releases/download/v0.1.0-beta.2/telemost-vpn-linux-x64.tar.gz) |
 
 **Linux:** распакуйте архив, откройте терминал в распакованной папке и выполните
 `bash install.sh`. Установщик добавит приложение и необходимые зависимости.
 
-[Все файлы релиза и контрольные суммы](https://github.com/bibibobo479/telemost-vpn/releases/tag/v0.1.0-beta.3).
+[Все файлы релиза и контрольные суммы](https://github.com/bibibobo479/telemost-vpn/releases/tag/v0.1.0-beta.4).
 
 ## Что это
 

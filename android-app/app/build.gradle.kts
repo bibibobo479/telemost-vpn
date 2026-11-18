@@ -5,7 +5,7 @@ plugins {
 
 val versionMajor = 0
 val versionMinor = 5
-val versionPatch = 3
+val versionPatch = 4
 val versionBuild = System.getenv("BUILD_NUMBER")?.toIntOrNull() ?: 0
 
 android {
@@ -19,7 +19,7 @@ android {
         minSdk = 23
         targetSdk = 36
         versionCode = 1_000_000 * versionMajor + 1_000 * versionMinor + versionPatch + versionBuild
-        versionName = "0.1.0-beta.3"
+        versionName = "0.1.0-beta.4"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

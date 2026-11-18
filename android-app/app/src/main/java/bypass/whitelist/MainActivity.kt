@@ -236,6 +236,7 @@ class MainActivity :
             runOnUiThread {
                 if (resetInProgress) {
                     mainFragment()?.onStatusChanged(VpnStatus.STOPPING)
+                    mainFragment()?.onStatusTextChanged("Stopping previous session...")
                     return@runOnUiThread
                 }
                 lastStatus = status
@@ -264,6 +265,7 @@ class MainActivity :
                 lastStatus = VpnStatus.STOPPING
                 mainFragment()?.onConnectedChanged(false)
                 mainFragment()?.onStatusChanged(VpnStatus.STOPPING)
+                mainFragment()?.onStatusTextChanged("Stopping previous session...")
             }
             TunnelServiceState.isTunnelActive(this) -> {
                 if (!connected || lastStatus != VpnStatus.TUNNEL_ACTIVE) {
@@ -315,6 +317,7 @@ class MainActivity :
         if (resetInProgress) {
             pendingConnectConfig = config
             appendLog("Queued connect after previous session stops")
+            mainFragment()?.onStatusTextChanged("Stopping previous session...")
             return
         }
         if (TunnelServiceState.isAnyTunnelComponentRunning(this) || !PortGuard.isPortAvailable(Prefs.socksPort)) {
@@ -423,7 +426,7 @@ class MainActivity :
 
     override fun onJoinStatusText(text: String) {
         if (resetInProgress) return
-        appendLog(text)
+        runOnUiThread { mainFragment()?.onStatusTextChanged(text) }
     }
 
     override fun onLoginLink(link: String) {
@@ -447,11 +450,6 @@ class MainActivity :
                 lastStatus = VpnStatus.CALL_FAILED
                 mainFragment()?.onStatusChanged(VpnStatus.CALL_FAILED)
                 return@runOnUiThread
-            }
-            if (status == VpnStatus.TUNNEL_LOST || status == VpnStatus.DATACHANNEL_LOST ||
-                status == VpnStatus.CALL_DISCONNECTED) {
-                connected = false
-                mainFragment()?.onConnectedChanged(false)
             }
             mainFragment()?.onStatusChanged(status)
             if (status == VpnStatus.TUNNEL_ACTIVE) {
@@ -706,6 +704,7 @@ class MainActivity :
             val generation = resetGeneration
             lastStatus = VpnStatus.CONNECTING
             mainFragment()?.onStatusChanged(VpnStatus.CONNECTING)
+            mainFragment()?.onStatusTextChanged("Получаем актуальную комнату…")
             thread(name="telemost-discovery") {
                 var reason = "Комната недоступна"
                 val resolved = try { SharedConnection.resolve(applicationContext,config) } catch (error: Exception) {
@@ -730,6 +729,7 @@ class MainActivity :
         if (resetInProgress) {
             pendingConnectConfig = config
             appendLog("Queued connect after previous session stops")
+            mainFragment()?.onStatusTextChanged("Stopping previous session...")
             return
         }
         if (TunnelServiceState.isAnyTunnelComponentRunning(this) || !PortGuard.isPortAvailable(Prefs.socksPort)) {
@@ -761,7 +761,7 @@ class MainActivity :
         mainFragment()?.onConnectedChanged(false)
 
         val headlessMode =
-            Prefs.headless || platform == CallPlatform.TELEMOST || platform == CallPlatform.WBSTREAM || platform == CallPlatform.DION || platform == CallPlatform.BITRIX || platform == CallPlatform.BLINK
+            Prefs.headless || platform == CallPlatform.WBSTREAM || platform == CallPlatform.DION || platform == CallPlatform.BITRIX || platform == CallPlatform.BLINK
 
         if (headlessMode && platform != CallPlatform.VK) {
             setJoinOverlayVisible(false)
@@ -826,6 +826,7 @@ class MainActivity :
         setJoinOverlayVisible(false)
         mainFragment()?.onConnectedChanged(false)
         mainFragment()?.onStatusChanged(VpnStatus.STOPPING)
+        mainFragment()?.onStatusTextChanged("Stopping previous session...")
         thread(name = "full-reset-shutdown") {
             controller?.close()
             var attempts = 0
