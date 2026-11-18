@@ -1,0 +1,25 @@
+[Unit]
+Description=Telemost transport with automatic reconnection
+PartOf=wb-vpn.target
+Requires=wb-vpn-guard.service
+After=wb-vpn-guard.service
+
+[Service]
+User=wbtransport
+Group=wbtransport
+ExecStart=/usr/bin/python3 /opt/wb-vpn/supervisor.py client
+Restart=always
+RestartSec=5
+UMask=0077
+Environment=GODEBUG=netdns=go
+Environment=PYTHONUNBUFFERED=1
+UnsetEnvironment=http_proxy https_proxy all_proxy HTTP_PROXY HTTPS_PROXY ALL_PROXY
+BindReadOnlyPaths=/etc/wb-vpn/transport-resolv.conf:/etc/resolv.conf
+BindReadOnlyPaths=/etc/wb-vpn/transport-nsswitch.conf:/etc/nsswitch.conf
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+RuntimeDirectory=wb-vpn-status
+RuntimeDirectoryMode=0755
+ReadWritePaths=/var/lib/wb-vpn /run/wb-vpn-status

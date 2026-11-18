@@ -1,0 +1,4 @@
+#!/usr/bin/python3
+import os
+from pathlib import Path
+print(Path(os.environ['WB_SSH_PASSWORD_FILE']).read_text(), end='')

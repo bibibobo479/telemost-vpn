@@ -1,0 +1,20 @@
+[Unit]
+Description=Telemost VPN server
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=wb-telemost
+Group=wb-telemost
+ExecStart=/usr/bin/python3 /opt/wb-telemost/supervisor.py server
+Restart=always
+RestartSec=5
+UMask=0077
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+ReadWritePaths=/var/lib/wb-telemost
+
+[Install]
+WantedBy=multi-user.target

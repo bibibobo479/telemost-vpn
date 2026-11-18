@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Отключить Телемост VPN
+Comment=Остановить VPN и восстановить обычную сеть
+Exec=pkexec /usr/local/sbin/wb-vpn-control disconnect
+Icon=network-offline
+Terminal=false
+Categories=Network;

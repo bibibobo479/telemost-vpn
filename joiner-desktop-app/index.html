@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:" />
+    <title>Telemost VPN Beta</title>
+    <link rel="stylesheet" href="styles/app.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Telemost VPN · Beta</h1>
+      <div class="status" id="status" data-state="idle">idle</div>
+    </header>
+    <main>
+      <section class="form">
+        <label>Код подключения из Linux-приложения
+          <input id="shareCode" type="password" placeholder="TMVPN1.…" autocomplete="off" />
+          <span class="hint">Код секретный. Одна сессия: отключите другое устройство.</span>
+        </label>
+        <button id="importCode">Импортировать код</button>
+        <label>
+          Join link
+          <input id="link" type="text" placeholder="Paste call link" />
+          <span class="hint" id="platformHint">Detected platform: -</span>
+        </label>
+        <label>
+          Display name
+          <input id="name" type="text" value="Joiner" />
+        </label>
+        <div class="row">
+          <label>
+            SOCKS5 port
+            <input id="socksPort" type="number" value="1080" min="1" max="65535" />
+          </label>
+          <label>
+            DNS
+            <input id="dns" type="text" value="1.1.1.1,8.8.8.8" />
+          </label>
+        </div>
+        <div class="row">
+          <label>
+            SOCKS5 user
+            <input id="socksUser" type="text" />
+          </label>
+          <label>
+            SOCKS5 password
+            <input id="socksPass" type="password" />
+          </label>
+        </div>
+        <div class="row">
+          <label>
+            Tunnel mode
+            <select id="tunnelMode">
+              <option value="video" selected>Video (VP8)</option>
+              <option value="dc">DataChannel</option>
+            </select>
+          </label>
+          <label>
+            Resources
+            <select id="resources">
+              <option value="moderate">Moderate</option>
+              <option value="default" selected>Default</option>
+              <option value="unlimited">Unlimited</option>
+            </select>
+          </label>
+        </div>
+        <div class="row">
+          <label>
+            VP8 FPS
+            <input id="vp8Fps" type="number" value="60" min="1" max="240" />
+          </label>
+          <label>
+            VP8 batch
+            <input id="vp8Batch" type="number" value="30" min="1" max="256" />
+          </label>
+        </div>
+        <label class="check">
+          <input id="noTun" type="checkbox" />
+          SOCKS5 only (no system-wide routing)
+        </label>
+        <label class="check">
+          <input id="dualTrack" type="checkbox" />
+          Dual-track
+        </label>
+        <label class="check">
+          <input id="reliable" type="checkbox" />
+          Reliable (KCP)
+        </label>
+        <div class="actions">
+          <button id="start">Start</button>
+          <button id="stop">Stop</button>
+        </div>
+      </section>
+      <section class="log-wrap">
+        <div class="login-card" id="loginCard" hidden>
+          <h2>Blink login</h2>
+          <span class="hint">Scan the QR with the Blink app on your phone, or copy the link and send it to whoever has Blink.</span>
+          <img id="loginQr" alt="Blink login QR" />
+          <div class="login-link-row">
+            <code id="loginLink"></code>
+            <button id="copyLoginLink">Copy</button>
+          </div>
+        </div>
+        <h2>Log <img class="log-download-btn" id="downloadLogs" src="resources/icons8-download-64.png" title="Download logs"></h2>
+        <pre id="log"></pre>
+      </section>
+    </main>
+    <script src="dist/renderer/index.js"></script>
+  </body>
+</html>

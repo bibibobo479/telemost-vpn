@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Телемост VPN
+Comment=VPN через Телемост: подключение, скорость, журнал и нагрузка сервера
+Exec=/usr/local/bin/wb-vpn-ui
+Icon=network-vpn
+Terminal=false
+Categories=Network;
+StartupNotify=true

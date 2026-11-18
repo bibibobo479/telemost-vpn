@@ -1,0 +1,8 @@
+[Unit]
+Description=Follow changes of the Wi-Fi gateway
+PartOf=wb-vpn.target
+
+[Timer]
+OnActiveSec=5
+OnUnitActiveSec=5
+AccuracySec=1

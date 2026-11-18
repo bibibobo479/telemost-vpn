@@ -1,0 +1,87 @@
+{
+  "name": "telemost-vpn",
+  "version": "0.1.0-beta.1",
+  "main": "dist/main/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "tsc && electron .",
+    "start:dev": "electron ."
+  },
+  "dependencies": {
+    "qrcode": "^1.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/qrcode": "^1.5.6",
+    "electron": "^33.0.0",
+    "electron-builder": "^25.0.0",
+    "typescript": "^5.6.0"
+  },
+  "build": {
+    "appId": "io.github.bibibobo479.telemostvpn",
+    "productName": "Telemost VPN Beta",
+    "directories": {
+      "output": "../prebuilts"
+    },
+    "files": [
+      "dist/**/*",
+      "index.html",
+      "styles/**/*",
+      "resources/**/*"
+    ],
+    "win": {
+      "target": "portable",
+      "artifactName": "${productName}-${version}-${arch}.${ext}",
+      "icon": "resources/icon.ico",
+      "requestedExecutionLevel": "requireAdministrator",
+      "extraResources": [
+        {
+          "from": "desktop-joiner/desktop-joiner-bundle.exe",
+          "to": "desktop-joiner.exe"
+        },
+        {
+          "from": "desktop-joiner/wintun-bundle.dll",
+          "to": "wintun.dll"
+        }
+      ],
+      "signAndEditExecutable": false
+    },
+    "linux": {
+      "target": "AppImage",
+      "artifactName": "${productName}-${version}-${arch}.${ext}",
+      "icon": "resources/icon.png",
+      "category": "Network",
+      "extraResources": [
+        {
+          "from": "desktop-joiner/desktop-joiner-bundle",
+          "to": "desktop-joiner"
+        }
+      ]
+    },
+    "mac": {
+      "target": "dmg",
+      "artifactName": "${productName}-${version}-${arch}.${ext}",
+      "icon": "resources/icon.icns",
+      "category": "public.app-category.utilities",
+      "extraResources": [
+        {
+          "from": "desktop-joiner/desktop-joiner-darwin",
+          "to": "desktop-joiner"
+        }
+      ]
+    },
+    "extraResources": [
+      {
+        "from": "../licenses",
+        "to": "licenses"
+      },
+      {
+        "from": "../LICENSE",
+        "to": "LICENSE.telemost-vpn"
+      }
+    ]
+  },
+  "description": "Telemost VPN beta client",
+  "author": "bibibobo479",
+  "license": "MIT"
+}

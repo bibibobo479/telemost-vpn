@@ -1,0 +1,8 @@
+[Unit]
+Description=Refresh Telemost physical uplink route
+PartOf=wb-vpn.target
+After=wb-vpn-guard.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /opt/wb-vpn/network.py refresh

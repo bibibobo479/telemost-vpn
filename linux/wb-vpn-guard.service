@@ -1,0 +1,11 @@
+[Unit]
+Description=Telemost routing and kill switch
+PartOf=wb-vpn.target
+Before=wb-vpn-joiner.service wb-vpn-tun.service
+After=network-online.target systemd-resolved.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/python3 /opt/wb-vpn/network.py up
+ExecStop=/usr/bin/python3 /opt/wb-vpn/network.py down

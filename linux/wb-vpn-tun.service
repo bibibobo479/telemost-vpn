@@ -1,0 +1,13 @@
+[Unit]
+Description=Telemost TUN to SOCKS adapter
+PartOf=wb-vpn.target
+Requires=wb-vpn-guard.service
+After=wb-vpn-guard.service
+
+[Service]
+ExecStart=/opt/wb-vpn/tun2socks --device tun://wb-tun --proxy socks5://127.0.0.1:1088 --loglevel warn
+Restart=always
+RestartSec=2
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes

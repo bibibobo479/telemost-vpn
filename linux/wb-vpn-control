@@ -1,0 +1,15 @@
+#!/bin/bash
+set -euo pipefail
+case "${1:-}" in
+  connect)
+    systemctl start wb-vpn.target
+    ;;
+  disconnect)
+    systemctl stop wb-vpn.target wb-vpn-joiner.service wb-vpn-tun.service wb-vpn-uplink.timer wb-vpn-uplink.service wb-vpn-guard.service
+    /usr/bin/python3 /opt/wb-vpn/network.py down
+    ;;
+  status)
+    systemctl is-active wb-vpn.target wb-vpn-joiner.service wb-vpn-tun.service
+    ;;
+  *) echo 'Usage: wb-vpn-control connect|disconnect|status' >&2; exit 2 ;;
+esac

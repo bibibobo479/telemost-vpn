@@ -1,0 +1,5 @@
+[Unit]
+Description=Telemost system VPN
+Requires=wb-vpn-guard.service
+Wants=wb-vpn-joiner.service wb-vpn-tun.service wb-vpn-uplink.timer
+After=wb-vpn-guard.service
