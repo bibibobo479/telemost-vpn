@@ -10,6 +10,7 @@ import androidx.core.view.isNotEmpty
 import androidx.fragment.app.Fragment
 import bypass.whitelist.App
 import bypass.whitelist.R
+import bypass.whitelist.tunnel.CallPlatform
 import bypass.whitelist.tunnel.SplitTunnelingMode
 import bypass.whitelist.tunnel.TunnelMode
 import bypass.whitelist.util.BackgroundRestrictionsManager
@@ -140,8 +141,10 @@ class SettingsScreenFragment : Fragment(R.layout.fragment_settings_screen) {
         val section = newSection(R.string.settings_section_behavior)
         val card = section.findViewById<LinearLayout>(R.id.sectionCard)
 
-        addSwitchRow(card, R.drawable.ic_setting_headless, getString(R.string.settings_row_headless), getString(R.string.settings_row_headless_sub), Prefs.headless) { checked ->
-            Prefs.headless = checked
+        if (Prefs.activeDestination?.platform != CallPlatform.TELEMOST) {
+            addSwitchRow(card, R.drawable.ic_setting_headless, getString(R.string.settings_row_headless), getString(R.string.settings_row_headless_sub), Prefs.headless) { checked ->
+                Prefs.headless = checked
+            }
         }
         addSwitchRow(card, R.drawable.ic_setting_reconnect, getString(R.string.settings_row_reconnect), getString(R.string.settings_row_reconnect_sub), Prefs.connectOnStart) { checked ->
             Prefs.connectOnStart = checked

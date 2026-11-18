@@ -102,6 +102,7 @@ class MainFragmentView(private val root: View) {
 
     fun bindHero(connected: Boolean, status: VpnStatus?) {
         val context = root.context
+        statusDetail.visibility = View.GONE
         if (connected) {
             heroLabel.text = context.getString(R.string.hero_disconnect)
             hero.setBackgroundResource(R.drawable.bg_hero_connected)
@@ -156,6 +157,10 @@ class MainFragmentView(private val root: View) {
     }
 
     fun bindStatus(status: VpnStatus) {
+        bindHero(connected = status == VpnStatus.TUNNEL_ACTIVE, status = status)
+        if (status !in listOf(VpnStatus.CALL_FAILED, VpnStatus.PORT_BUSY, VpnStatus.VPN_CONFLICT,
+                VpnStatus.ACTION_REQUIRED_CAPTCHA, VpnStatus.ACTION_REQUIRED_LOGIN)) return
+        statusDetail.visibility = View.VISIBLE
         val labelRes = status.labelRes
         statusDetail.text = if (status == VpnStatus.PORT_BUSY) {
             root.context.getString(labelRes, Prefs.socksPort)
@@ -165,6 +170,7 @@ class MainFragmentView(private val root: View) {
     }
 
     fun bindStatusText(text: String) {
+        statusDetail.visibility = View.VISIBLE
         statusDetail.text = text
     }
 
