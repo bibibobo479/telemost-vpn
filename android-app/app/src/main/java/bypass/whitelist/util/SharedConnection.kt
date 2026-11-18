@@ -84,23 +84,28 @@ object SharedConnection {
         }
         return decode(String(cipher.doFinal(Base64.decode(parts[1],Base64.NO_WRAP)),Charsets.UTF_8))
     }
-    private fun json(url: String, token: String? = null): JSONObject {
-        val conn = URL(url).openConnection() as HttpURLConnection
-        conn.connectTimeout=20000; conn.readTimeout=25000; conn.instanceFollowRedirects=false
-        token?.let { conn.setRequestProperty("Authorization","OAuth $it") }
-        try {
-            check(conn.responseCode == 200) { "Disk request failed" }
-            return JSONObject(String(bounded(conn.inputStream),Charsets.UTF_8))
-        } finally { conn.disconnect() }
+    fun errorMessage(error: Exception): String = when (error) {
+        is DiskHttp.Failure -> when (error.status) {
+            401,403 -> "Яндекс Диск отклонил токен. Получите новый код подключения"
+            404 -> "Файл комнаты не найден на Диске. Проверьте сервер и код"
+            429 -> "Яндекс Диск ограничил запросы. Повторите позже"
+            else -> "Яндекс Диск: HTTP ${error.status}. Повторите подключение"
+        }
+        is java.net.UnknownHostException -> "Не удалось найти Яндекс Диск через DNS"
+        is java.net.SocketTimeoutException -> "Яндекс Диск не ответил вовремя. Повторите подключение"
+        is javax.net.ssl.SSLException -> "Ошибка защищённого соединения с Яндекс Диском"
+        is java.security.GeneralSecurityException -> "Не удалось прочитать сохранённый ключ. Импортируйте код заново"
+        is java.io.IOException -> "Не удалось связаться с Яндекс Диском. Проверьте сеть"
+        else -> "Некорректный ответ Диска или сохранённый код подключения"
     }
     fun resolve(context: Context, config: CallConfig): CallConfig {
         val value=read(context,config.url.removePrefix(PREFIX))
         val path=URLEncoder.encode(value.getString("folder")+"/room.json","UTF-8")
-        val info=json("https://cloud-api.yandex.net/v1/disk/resources/download?path=$path",value.getString("token"))
+        val info=DiskHttp.json("https://cloud-api.yandex.net/v1/disk/resources/download?path=$path",value.getString("token"))
         val href=URL(info.getString("href"))
         require(href.protocol == "https" && href.userInfo == null &&
             (href.host.endsWith(".yandex.net") || href.host.endsWith(".yandex.ru")))
-        val link=json(href.toString()).getString("link")
+        val link=DiskHttp.json(href.toString()).getString("link")
         val url=URL(link)
         require(url.protocol == "https" && url.host == "telemost.yandex.ru" && url.userInfo == null &&
             (url.port == -1 || url.port == 443) && url.path.startsWith("/j/") && url.path.length > 3)

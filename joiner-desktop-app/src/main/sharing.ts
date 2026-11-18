@@ -21,8 +21,17 @@ export function decodeShare(code: string): SharedConnection {
     throw new Error('Unsupported connection code');
   return value;
 }
-async function jsonRequest(url: string, headers?: Record<string,string>): Promise<any> {
-  const response = await fetch(url, { headers, signal: AbortSignal.timeout(25000), redirect: 'error' });
+export async function jsonRequest(url: string, headers?: Record<string,string>, hop = 0): Promise<any> {
+  const response = await fetch(url, { headers, signal: AbortSignal.timeout(25000), redirect: 'manual' });
+  if ([301,302,303,307,308].includes(response.status)) {
+    await response.body?.cancel();
+    const location=response.headers.get('location');
+    if (headers || !location || hop >= 5) throw new Error('Unexpected Disk redirect');
+    const next=new URL(location,url);
+    if (next.protocol !== 'https:' || next.username || next.password || next.port ||
+        !['.yandex.net','.yandex.ru'].some(s => next.hostname.endsWith(s))) throw new Error('Unexpected storage host');
+    return jsonRequest(next.toString(), undefined, hop+1);
+  }
   if (!response.ok) throw new Error(`Yandex Disk HTTP ${response.status}`);
   const reader = response.body?.getReader();
   if (!reader) throw new Error('Empty Disk response');

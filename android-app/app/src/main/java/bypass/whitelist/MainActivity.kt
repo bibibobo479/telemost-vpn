@@ -706,14 +706,20 @@ class MainActivity :
             mainFragment()?.onStatusChanged(VpnStatus.CONNECTING)
             mainFragment()?.onStatusTextChanged("Получаем актуальную комнату…")
             thread(name="telemost-discovery") {
-                val resolved = try { SharedConnection.resolve(applicationContext,config) } catch (_: Exception) { null }
+                var reason = "Комната недоступна"
+                val resolved = try { SharedConnection.resolve(applicationContext,config) } catch (error: Exception) {
+                    reason = SharedConnection.errorMessage(error)
+                    null
+                }
                 runOnUiThread {
                     if (!isDestroyed && generation == resetGeneration) {
                         if (resolved != null) startJoinFor(resolved)
                         else {
                             lastStatus = VpnStatus.CALL_FAILED
                             mainFragment()?.onStatusChanged(VpnStatus.CALL_FAILED)
-                            Toast.makeText(this,"Комната недоступна. Проверьте код, интернет и сервер",Toast.LENGTH_LONG).show()
+                            appendLog(reason)
+                            mainFragment()?.onStatusTextChanged(reason)
+                            Toast.makeText(this,reason,Toast.LENGTH_LONG).show()
                         }
                     }
                 }
